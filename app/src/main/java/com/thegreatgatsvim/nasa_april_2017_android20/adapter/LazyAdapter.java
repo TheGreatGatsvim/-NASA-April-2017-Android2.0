@@ -6,6 +6,7 @@ import java.util.List;
 
 import android.app.Activity;
 import android.content.Context;
+import android.graphics.Color;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -58,7 +59,7 @@ public class LazyAdapter extends ArrayAdapter<Recycle>{
             res.imageView = (CircularImageView) row.findViewById(R.id.imageView);
             res.recyclable = (TextView) row.findViewById(R.id.recycleRecyclable);
             res.model = (TextView) row.findViewById(R.id.recycleModel);
-//            res.points = (TextView) row.findViewById(R.id.recyclePoints);
+            res.points = (TextView) row.findViewById(R.id.points);
 
             row.setTag(res);
         }else{
@@ -72,12 +73,24 @@ public class LazyAdapter extends ArrayAdapter<Recycle>{
 //                .error(R.drawable.default_blur)
                 .into(res.imageView);
 
-        if (rc.isRecyclable())
+        if (rc.isRecyclable()) {
             res.recyclable.setText("Reciclable");
-        else
+            res.recyclable.setTextColor(Color.parseColor("#8BC34A"));
+        }else {
             res.recyclable.setText("No Reciclable");
-        res.model.setText(rc.getLabel());
-//        res.points.setText(Integer.toString(rc.getScore()));
+            res.recyclable.setTextColor(Color.parseColor("#EF5350"));
+        }
+        if(rc.getLabel().equals("plastic") || rc.getLabel().equals("can")){
+            res.model.setText(rc.getLabel());
+            res.model.setTextColor(Color.parseColor("#FFEE58"));
+        }else if(rc.getLabel().equals("glass")){
+            res.model.setText(rc.getLabel());
+            res.model.setTextColor(Color.parseColor("#4CAF50"));
+        }else{  // carton
+            res.model.setText(rc.getLabel());
+            res.model.setTextColor(Color.parseColor("#00BCD4"));
+        }
+        res.points.setText(Integer.toString(rc.getScore()) + " PTS");
 
         return row;
     }

@@ -1,8 +1,14 @@
 package com.thegreatgatsvim.nasa_april_2017_android20;
 
+import android.app.ProgressDialog;
+import android.content.Intent;
+import android.os.Handler;
 import android.support.annotation.NonNull;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.view.Menu;
+import android.view.MenuInflater;
+import android.view.MenuItem;
 import android.widget.ListView;
 
 import com.thegreatgatsvim.nasa_april_2017_android20.adapter.LazyAdapter;
@@ -43,6 +49,10 @@ public class MainActivity extends AppCompatActivity {
 
         service = retrofit.create(UtilService.class);
 
+        onCall();
+    }
+
+    private void onCall() {
         Call<List<Recycle>> call = service.getPictures();
         call.enqueue(new Callback<List<Recycle>>() {
             @Override
@@ -63,4 +73,46 @@ public class MainActivity extends AppCompatActivity {
             }
         });
     }
+
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        MenuInflater inflater = getMenuInflater();
+        inflater.inflate(R.menu.menu, menu);
+        return true;
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        switch (item.getItemId()) {
+            case R.id.about:
+                Intent myIntent = new Intent(MainActivity.this, InfoActivity.class);
+                //myIntent.putExtra("key", value); //Optional parameters
+                MainActivity.this.startActivity(myIntent);
+                return true;
+
+            case R.id.refresh:
+                final ProgressDialog progress = new ProgressDialog(this);
+                progress.setTitle("Connecting");
+                progress.setMessage("Please wait while we refresh...");
+                progress.show();
+
+                Runnable progressRunnable = new Runnable() {
+
+                    @Override
+                    public void run() {
+                        onCall();
+                        progress.cancel();
+                    }
+                };
+
+                Handler pdCanceller = new Handler();
+                pdCanceller.postDelayed(progressRunnable, 3000);
+                return true;
+
+            default:
+                return super.onOptionsItemSelected(item);
+        }
+    }
+
+
 }
