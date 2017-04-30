@@ -11,6 +11,7 @@ import android.provider.MediaStore;
 
 import android.support.annotation.NonNull;
 import android.support.v4.content.FileProvider;
+import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 
@@ -51,7 +52,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     String mCurrentPhotoPath;
     UtilService service;
     public static LazyAdapter ADAPTER;
-    private ListView listView;
+    private ListView lv;
     private List<Recycle> listRecycle;
     MainActivity activity;
 
@@ -59,13 +60,14 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-        listView = (ListView) findViewById(R.id.listViewRecycle);
+
+        lv = (ListView) findViewById(R.id.listViewRecycle);
         activity = this;
 
         init();
 
         Retrofit retrofit = new Retrofit.Builder()
-                .baseUrl("http://10.10.11.56:8000")
+                .baseUrl("http://10.10.11.56:9856")
                 .addConverterFactory(GsonConverterFactory.create())
                 .build();
 
@@ -82,7 +84,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                 listRecycle = response.body();
 
                 ADAPTER = new LazyAdapter(activity,R.layout.activity_recycle_adapter, listRecycle);
-                listView.setAdapter(ADAPTER);
+                lv.setAdapter(ADAPTER);
             }
 
             @Override
@@ -208,5 +210,4 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         mCurrentPhotoPath = image.getAbsolutePath();
         return image;
     }
-
 }
