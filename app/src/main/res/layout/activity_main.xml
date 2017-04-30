@@ -1,50 +1,100 @@
 <?xml version="1.0" encoding="utf-8"?>
-<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<android.support.design.widget.CoordinatorLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
-    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/container"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context="com.thegreatgatsvim.nasa_april_2017_android20.MainActivity">
+    tools:context="com.thegreatgatsvim.nasa_april_2017_android20.MainActivity"
+    xmlns:tools="http://schemas.android.com/tools">
 
-        <ImageView
-            android:id="@+id/imageBackground"
-            android:layout_width="fill_parent"
-            android:layout_height="250dp"
-            android:layout_alignParentBottom="false"
-            android:layout_alignParentTop="true"
-            android:layout_centerHorizontal="true"
-            android:scaleType="centerCrop"
-            app:srcCompat="@mipmap/ic_launcher" />
+    <android.support.design.widget.AppBarLayout
+        android:id="@+id/main.appbar"
+        android:layout_width="match_parent"
+        android:layout_height="250dp"
+        android:theme="@style/ThemeOverlay.AppCompat.Dark.ActionBar"
+        android:fitsSystemWindows="true"
+        >
+        <android.support.design.widget.CollapsingToolbarLayout
+            android:id="@+id/main.collapsing"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            app:layout_scrollFlags="scroll|exitUntilCollapsed"
+            android:fitsSystemWindows="true"
+            app:contentScrim="?attr/colorPrimary"
+            app:expandedTitleMarginStart="48dp"
+            app:expandedTitleMarginEnd="64dp"
+            >
 
-        <com.mikhaellopez.circularimageview.CircularImageView
-            android:id="@+id/addButton"
-            android:layout_width="80dp"
-            android:layout_height="80dp"
-            android:layout_above="@+id/listViewRecycle"
-            android:layout_centerHorizontal="true"
-            android:layout_marginBottom="27dp"
-            android:layout_marginRight="18dp"
-            android:background="@mipmap/ic_launcher"
-            app:civ_border="true"
-            app:civ_border_color="#0F81C2"
-            app:civ_border_width="4dp"
-            app:civ_shadow="true"
-            app:civ_shadow_color="#8BC34A"
-            app:civ_shadow_radius="10"
-            app:srcCompat="@mipmap/ic_launcher" />
+            <ImageView
+                android:id="@+id/imageBackground"
+                android:layout_width="fill_parent"
+                android:layout_height="match_parent"
+                android:layout_alignParentBottom="false"
+                android:layout_alignParentTop="true"
+                android:layout_centerHorizontal="true"
+                android:scaleType="centerCrop"
+                app:srcCompat="@mipmap/wallpaper" />
+
+            <android.support.v7.widget.Toolbar
+                android:id="@+id/main.toolbar"
+                android:layout_width="match_parent"
+                android:layout_height="?attr/actionBarSize"
+                app:popupTheme="@style/ThemeOverlay.AppCompat.Light"
+                android:backgroundTint="@color/fab_stroke_top_inner_color"
+                app:layout_collapseMode="pin"
+                />
+
+            <TextView
+                android:id="@+id/totalScore"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:gravity="center"
+                android:text="0 Pts"
+                android:textAlignment="center"
+                android:textAppearance="?android:attr/textAppearanceLarge"
+                android:textColor="@android:color/background_light"
+                android:textSize="70sp"
+                android:textStyle="bold" />
+        </android.support.design.widget.CollapsingToolbarLayout>
+    </android.support.design.widget.AppBarLayout>
+
+    <android.support.v4.widget.NestedScrollView
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:scrollbars="none"
+        app:layout_behavior="@string/appbar_scrolling_view_behavior">
 
         <ListView
-            android:layout_width="wrap_content"
+            android:id="@+id/listViewRecycle"
+            android:scrollbars="none"
+            android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:layout_below="@+id/imageBackground"
-            android:id="@+id/listViewRecycle"
             android:layout_gravity="center"
             android:fastScrollEnabled="true"
             app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintHorizontal_bias="0.0"
             app:layout_constraintLeft_toLeftOf="parent"
             app:layout_constraintRight_toRightOf="parent"
             app:layout_constraintTop_toTopOf="parent"
-            app:layout_constraintHorizontal_bias="0.0"
             app:layout_constraintVertical_bias="1.0" />
 
-</RelativeLayout>
+    </android.support.v4.widget.NestedScrollView>
+
+    <android.support.design.widget.FloatingActionButton
+        android:id="@+id/addButton"
+        android:layout_above="@+id/listViewRecycle"
+        android:clickable="true"
+        app:backgroundTint="@color/colorPrimary"
+        android:layout_centerHorizontal="true"
+        android:layout_height="wrap_content"
+        android:layout_width="wrap_content"
+        android:layout_margin="@dimen/activity_horizontal_margin"
+        android:src="@mipmap/cam"
+        app:layout_anchor="@id/main.appbar"
+        app:layout_anchorGravity="bottom|center"
+        />
+</android.support.design.widget.CoordinatorLayout>
+
+

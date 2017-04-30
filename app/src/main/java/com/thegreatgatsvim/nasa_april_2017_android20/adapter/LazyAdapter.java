@@ -112,8 +112,8 @@ public class LazyAdapter extends ArrayAdapter<Recycle>{
             res.recyclable.setTextColor(Color.parseColor("#00BCD4"));
         }else{
             res.model.setText(" - - - ");
-            res.model.setTextColor(Color.parseColor("#9E9E9E"));
-            res.recyclable.setTextColor(Color.parseColor("#00BCD4"));
+            res.model.setTextColor(Color.parseColor("#000000"));
+            res.recyclable.setTextColor(Color.parseColor("#000000"));
         }
 
         res.points.setText(Integer.toString(rc.getScore()) + " PTS");

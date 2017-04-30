@@ -11,11 +11,14 @@ import android.os.Environment;
 import android.provider.MediaStore;
 
 import android.support.annotation.NonNull;
+import android.support.design.widget.FloatingActionButton;
 import android.support.v4.content.FileProvider;
+import android.support.v4.view.ViewCompat;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 
+import android.support.v7.widget.ButtonBarLayout;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
@@ -23,6 +26,7 @@ import android.view.MenuItem;
 import android.view.View;
 
 import android.widget.ListView;
+import android.widget.TextView;
 
 import com.mikhaellopez.circularimageview.CircularImageView;
 import com.thegreatgatsvim.nasa_april_2017_android20.adapter.LazyAdapter;
@@ -63,6 +67,8 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         setContentView(R.layout.activity_main);
 
         lv = (ListView) findViewById(R.id.listViewRecycle);
+        lv.setNestedScrollingEnabled(true);
+        ViewCompat.setNestedScrollingEnabled(lv, true);
         activity = this;
 
         //Almacena puntuacion
@@ -75,7 +81,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         init();
 
         Retrofit retrofit = new Retrofit.Builder()
-                .baseUrl("http://10.10.11.56:9856")
+                .baseUrl("http://10.10.11.56:8000")
                 .addConverterFactory(GsonConverterFactory.create())
                 .build();
 
@@ -93,6 +99,13 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
 
                 ADAPTER = new LazyAdapter(activity,R.layout.activity_recycle_adapter, listRecycle);
                 lv.setAdapter(ADAPTER);
+
+                int totalScore = 0;
+                for (Recycle re : listRecycle)
+                    totalScore += re.getScore();
+
+                TextView totalSC =(TextView) findViewById(R.id.totalScore);
+                totalSC.setText(Integer.toString(totalScore) + "Pts");
             }
 
             @Override
@@ -146,7 +159,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
 
 
     private void init() {
-        CircularImageView addButon =(CircularImageView) findViewById(R.id.addButton);
+        FloatingActionButton addButon =(FloatingActionButton) findViewById(R.id.addButton);
         addButon.setOnClickListener(this);
     }
 
