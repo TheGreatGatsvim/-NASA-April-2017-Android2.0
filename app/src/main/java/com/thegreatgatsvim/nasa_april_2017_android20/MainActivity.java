@@ -2,6 +2,7 @@ package com.thegreatgatsvim.nasa_april_2017_android20;
 
 import android.app.ProgressDialog;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.os.Handler;
 
 import android.content.Intent;
@@ -63,6 +64,13 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
 
         lv = (ListView) findViewById(R.id.listViewRecycle);
         activity = this;
+
+        //Almacena puntuacion
+        SharedPreferences mPrefs = getSharedPreferences("puntos", 0);
+        SharedPreferences.Editor mEditor = mPrefs.edit();
+        mEditor.putString("puntos", "0").commit();
+        mEditor.putString("latas", "0").commit();
+        mEditor.putString("botellas", "0").commit();
 
         init();
 

@@ -3,9 +3,12 @@ package com.thegreatgatsvim.nasa_april_2017_android20.adapter;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
+import java.util.StringTokenizer;
 
 import android.app.Activity;
 import android.content.Context;
+import android.content.Intent;
+import android.content.SharedPreferences;
 import android.graphics.Color;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -75,22 +78,48 @@ public class LazyAdapter extends ArrayAdapter<Recycle>{
 
         if (rc.isRecyclable()) {
             res.recyclable.setText("Reciclable");
-            res.recyclable.setTextColor(Color.parseColor("#8BC34A"));
         }else {
             res.recyclable.setText("No Reciclable");
-            res.recyclable.setTextColor(Color.parseColor("#EF5350"));
         }
-        if(rc.getLabel().equals("plastic") || rc.getLabel().equals("can")){
+
+        SharedPreferences mPrefs = context.getSharedPreferences("label", 0);
+        String puntos = mPrefs.getString("puntos", "0");
+        String latas = mPrefs.getString("latas", "0");
+        String botellas = mPrefs.getString("botellas", "0");
+        SharedPreferences.Editor mEditor = mPrefs.edit();
+
+        if(rc.getLabel().equals("plastic") ) {
             res.model.setText(rc.getLabel());
-            res.model.setTextColor(Color.parseColor("#FFC107"));
+            res.model.setTextColor(Color.parseColor("#9E9E9E"));
+            res.recyclable.setTextColor(Color.parseColor("#FFC107"));
+            //aumenta en 1 el numero de botellas
+            int botellasint = Integer.parseInt(botellas);
+            mEditor.putString("botellas", Integer.toString(  botellasint++  ) ).commit();
+
+        }else if(rc.getLabel().equals("can")){
+            res.model.setText(rc.getLabel());
+            res.model.setTextColor(Color.parseColor("#9E9E9E"));
+            res.recyclable.setTextColor(Color.parseColor("#FFC107"));
+            int latasint = Integer.parseInt(latas);
+            mEditor.putString("latas", Integer.toString(  latasint++  ) ).commit();
         }else if(rc.getLabel().equals("glass")){
             res.model.setText(rc.getLabel());
-            res.model.setTextColor(Color.parseColor("#4CAF50"));
-        }else{  // carton
+            res.model.setTextColor(Color.parseColor("#9E9E9E"));
+            res.recyclable.setTextColor(Color.parseColor("#4CAF50"));
+        }else if(rc.getLabel().equals("carton")){
             res.model.setText(rc.getLabel());
-            res.model.setTextColor(Color.parseColor("#00BCD4"));
+            res.model.setTextColor(Color.parseColor("#9E9E9E"));
+            res.recyclable.setTextColor(Color.parseColor("#00BCD4"));
+        }else{
+            res.model.setText(" - - - ");
+            res.model.setTextColor(Color.parseColor("#9E9E9E"));
+            res.recyclable.setTextColor(Color.parseColor("#00BCD4"));
         }
+
         res.points.setText(Integer.toString(rc.getScore()) + " PTS");
+        //aumenta numero de puntos
+        int puntosint = Integer.parseInt(puntos);
+        mEditor.putString("puntos", Integer.toString(  puntosint++  ) ).commit();
 
         return row;
     }
