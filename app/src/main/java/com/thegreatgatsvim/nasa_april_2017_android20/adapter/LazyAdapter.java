@@ -82,7 +82,7 @@ public class LazyAdapter extends ArrayAdapter<Recycle>{
         }
         if(rc.getLabel().equals("plastic") || rc.getLabel().equals("can")){
             res.model.setText(rc.getLabel());
-            res.model.setTextColor(Color.parseColor("#FFEE58"));
+            res.model.setTextColor(Color.parseColor("#FFC107"));
         }else if(rc.getLabel().equals("glass")){
             res.model.setText(rc.getLabel());
             res.model.setTextColor(Color.parseColor("#4CAF50"));
