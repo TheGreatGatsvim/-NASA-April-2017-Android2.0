@@ -16,6 +16,23 @@
             android:scaleType="centerCrop"
             app:srcCompat="@mipmap/ic_launcher" />
 
+        <com.mikhaellopez.circularimageview.CircularImageView
+            android:id="@+id/addButton"
+            android:layout_width="80dp"
+            android:layout_height="80dp"
+            android:layout_above="@+id/listViewRecycle"
+            android:layout_centerHorizontal="true"
+            android:layout_marginBottom="27dp"
+            android:layout_marginRight="18dp"
+            android:background="@mipmap/ic_launcher"
+            app:civ_border="true"
+            app:civ_border_color="#0F81C2"
+            app:civ_border_width="4dp"
+            app:civ_shadow="true"
+            app:civ_shadow_color="#8BC34A"
+            app:civ_shadow_radius="10"
+            app:srcCompat="@mipmap/ic_launcher" />
+
         <ListView
             android:layout_width="wrap_content"
             android:layout_height="match_parent"
