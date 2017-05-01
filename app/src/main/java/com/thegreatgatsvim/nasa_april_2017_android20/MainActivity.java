@@ -1,8 +1,11 @@
 package com.thegreatgatsvim.nasa_april_2017_android20;
 
 import android.app.ProgressDialog;
+import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.os.Handler;
 
 import android.content.Intent;
@@ -19,6 +22,8 @@ import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 
 import android.support.v7.widget.ButtonBarLayout;
+import android.support.v7.widget.LinearLayoutManager;
+import android.support.v7.widget.RecyclerView;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
@@ -27,14 +32,19 @@ import android.view.View;
 
 import android.widget.ListView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.mikhaellopez.circularimageview.CircularImageView;
 import com.thegreatgatsvim.nasa_april_2017_android20.adapter.LazyAdapter;
 import com.thegreatgatsvim.nasa_april_2017_android20.models.Recycle;
 import com.thegreatgatsvim.nasa_april_2017_android20.util.UtilService;
 
+import java.io.ByteArrayInputStream;
+import java.io.ByteArrayOutputStream;
 import java.io.File;
+import java.io.FileOutputStream;
 import java.io.IOException;
+import java.io.InputStream;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Collection;
@@ -57,7 +67,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     String mCurrentPhotoPath;
     UtilService service;
     public static LazyAdapter ADAPTER;
-    private ListView lv;
+    private RecyclerView lv;
     private List<Recycle> listRecycle;
     MainActivity activity;
 
@@ -65,11 +75,10 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-
-        lv = (ListView) findViewById(R.id.listViewRecycle);
-        lv.setNestedScrollingEnabled(true);
-        ViewCompat.setNestedScrollingEnabled(lv, true);
         activity = this;
+
+        lv = (RecyclerView) findViewById(R.id.listViewRecycle);
+        lv.setLayoutManager(new LinearLayoutManager(this));
 
         //Almacena puntuacion
         SharedPreferences mPrefs = getSharedPreferences("puntos", 0);
@@ -81,7 +90,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         init();
 
         Retrofit retrofit = new Retrofit.Builder()
-                .baseUrl("http://10.10.11.56:8000")
+                .baseUrl("http://192.168.1.20:8000")
                 .addConverterFactory(GsonConverterFactory.create())
                 .build();
 
@@ -97,7 +106,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
             public void onResponse(Call<List<Recycle>> call, Response<List<Recycle>> response) {
                 listRecycle = response.body();
 
-                ADAPTER = new LazyAdapter(activity,R.layout.activity_recycle_adapter, listRecycle);
+                ADAPTER = new LazyAdapter(activity, listRecycle);
                 lv.setAdapter(ADAPTER);
 
                 int totalScore = 0;
@@ -110,7 +119,6 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
 
             @Override
             public void onFailure(Call<List<Recycle>> call, Throwable t) {
-
             }
         });
     }
@@ -128,7 +136,6 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         switch (item.getItemId()) {
             case R.id.about:
                 Intent myIntent = new Intent(MainActivity.this, InfoActivity.class);
-                //myIntent.putExtra("key", value); //Optional parameters
                 MainActivity.this.startActivity(myIntent);
                 return true;
 
@@ -191,27 +198,27 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                         photoFile);
                 takePictureIntent.putExtra(MediaStore.EXTRA_OUTPUT, photoURI);
                 startActivityForResult(takePictureIntent, REQUEST_TAKE_PHOTO);
-                postImage(photoFile);
             }
         }
     }
 
-    private void postImage(final File photoFile) {
-        MultipartBody.Part fileToUpload = MultipartBody.Part.createFormData("file", photoFile.getName());
-        RequestBody filename = RequestBody.create(MediaType.parse("text/plain"), photoFile.getName());
+    private void postImage(final byte[] photoFile) {
+        RequestBody requestBody = RequestBody.create(MediaType.parse("image/*"), photoFile);
+        MultipartBody.Part fileToUpload = MultipartBody.Part.createFormData("feature", "feature.jpg", requestBody);
 
-        Call<Recycle> call = service.postImage(fileToUpload, filename);
+        Call<Recycle> call = service.postImage(fileToUpload);
         call.enqueue(new Callback<Recycle>() {
             @Override
             public void onResponse(Call<Recycle> call, Response<Recycle> response) {
-                System.out.println(photoFile.getAbsolutePath());
-                System.out.println("********");
-                System.out.println(response.code());
+                if (response.code() == 200){
+                    onCall();
+                    sendToast("Thanks, You make the world a better place!", Toast.LENGTH_LONG);
+                }
             }
 
             @Override
             public void onFailure(Call<Recycle> call, Throwable t) {
-
+                sendToast("Sorry, we can't process your image", Toast.LENGTH_LONG);
             }
         });
     }
@@ -230,5 +237,26 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         // Save a file: path for use with ACTION_VIEW intents
         mCurrentPhotoPath = image.getAbsolutePath();
         return image;
+    }
+
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        if (requestCode == REQUEST_TAKE_PHOTO && resultCode == RESULT_OK) {
+            Bitmap bmp = BitmapFactory.decodeFile(mCurrentPhotoPath);
+            ByteArrayOutputStream bos = new ByteArrayOutputStream();
+            bmp.compress(Bitmap.CompressFormat.JPEG, 40, bos);
+
+            postImage(bos.toByteArray());
+            sendToast("Loading image...", Toast.LENGTH_SHORT);
+        }
+    }
+
+    private void sendToast(String s, int duration) {
+        Context context = getApplicationContext();
+        CharSequence text = s;
+
+        Toast toast = Toast.makeText(context, text, duration);
+        toast.show();
     }
 }

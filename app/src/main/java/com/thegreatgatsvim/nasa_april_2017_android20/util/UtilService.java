@@ -17,10 +17,10 @@ import retrofit2.http.Part;
 
 
 public interface UtilService {
-    @GET("picture")
+    @GET("picture/")
     Call<List<Recycle>> getPictures();
 
     @Multipart
-    @POST("picture")
-    Call<Recycle> postImage(@Part MultipartBody.Part file, @Part("feature") RequestBody name);
+    @POST("picture/")
+    Call<Recycle> postImage(@Part MultipartBody.Part file);
 }
