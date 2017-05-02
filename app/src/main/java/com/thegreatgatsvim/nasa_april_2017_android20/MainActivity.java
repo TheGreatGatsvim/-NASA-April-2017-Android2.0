@@ -90,7 +90,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         init();
 
         Retrofit retrofit = new Retrofit.Builder()
-                .baseUrl("http://192.168.1.20:8000")
+                .baseUrl("http://nasa2017.jorgechato.com:8000")
                 .addConverterFactory(GsonConverterFactory.create())
                 .build();
 
