@@ -49,9 +49,9 @@ public class LazyAdapter extends RecyclerView.Adapter<LazyAdapter.CustomViewHold
         }
 
         SharedPreferences mPrefs = context.getSharedPreferences("label", 0);
-        String puntos = mPrefs.getString("puntos", "0");
-        String latas = mPrefs.getString("latas", "0");
-        String botellas = mPrefs.getString("botellas", "0");
+        String puntos = mPrefs.getString("Points", "0");
+        String latas = mPrefs.getString("Cans", "0");
+        String botellas = mPrefs.getString("Bottles", "0");
         SharedPreferences.Editor mEditor = mPrefs.edit();
 
         if(rc.getLabel().equals("plastic") ) {
@@ -60,20 +60,20 @@ public class LazyAdapter extends RecyclerView.Adapter<LazyAdapter.CustomViewHold
             holder.recyclable.setTextColor(Color.parseColor("#FFC107"));
             //aumenta en 1 el numero de botellas
             int botellasint = Integer.parseInt(botellas);
-            mEditor.putString("botellas", Integer.toString(  botellasint++  ) ).commit();
+            mEditor.putString("Bottles", Integer.toString(  botellasint++  ) ).commit();
 
         }else if(rc.getLabel().equals("can")){
             holder.model.setText("Can");
             holder.model.setTextColor(Color.parseColor("#9E9E9E"));
             holder.recyclable.setTextColor(Color.parseColor("#FFC107"));
             int latasint = Integer.parseInt(latas);
-            mEditor.putString("latas", Integer.toString(  latasint++  ) ).commit();
+            mEditor.putString("Cans", Integer.toString(  latasint++  ) ).commit();
         }else if(rc.getLabel().equals("glass")){
             holder.model.setText("Glass");
             holder.model.setTextColor(Color.parseColor("#9E9E9E"));
             holder.recyclable.setTextColor(Color.parseColor("#4CAF50"));
         }else if(rc.getLabel().equals("carton")){
-            holder.model.setText("Cartoon");
+            holder.model.setText("Paperboard");
             holder.model.setTextColor(Color.parseColor("#9E9E9E"));
             holder.recyclable.setTextColor(Color.parseColor("#00BCD4"));
         }else{
@@ -85,7 +85,7 @@ public class LazyAdapter extends RecyclerView.Adapter<LazyAdapter.CustomViewHold
         holder.points.setText(Integer.toString(rc.getScore()) + " PTS");
         //aumenta numero de puntos
         int puntosint = Integer.parseInt(puntos);
-        mEditor.putString("puntos", Integer.toString(  puntosint++  ) ).commit();
+        mEditor.putString("Points", Integer.toString(  puntosint++  ) ).commit();
     }
 
     @Override
